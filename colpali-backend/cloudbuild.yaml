@@ -1,0 +1,38 @@
+steps:
+  # Build the container image
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['build', '-t', 'gcr.io/eigenvalue-core/colpali-backend', '.']
+    timeout: '1800s'
+
+  # Push the container image to Container Registry
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', 'gcr.io/eigenvalue-core/colpali-backend']
+
+  # Deploy to Cloud Run
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    entrypoint: gcloud
+    args:
+      - 'run'
+      - 'deploy'
+      - 'colpali-backend'
+      - '--image'
+      - 'gcr.io/eigenvalue-core/colpali-backend'
+      - '--region'
+      - 'us-central1'
+      - '--platform'
+      - 'managed'
+      - '--cpu'
+      - '4'
+      - '--memory'
+      - '16Gi'
+      - '--timeout'
+      - '3600'
+      - '--cpu-throttling'
+      - 'false'
+
+images:
+  - 'gcr.io/eigenvalue-core/colpali-backend'
+
+options:
+  machineType: 'N1_HIGHCPU_8'
+  diskSizeGb: '100' 

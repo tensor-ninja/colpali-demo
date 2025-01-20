@@ -1,0 +1,6 @@
+torch
+Pillow
+datasets
+tqdm
+litserve
+transformers 
